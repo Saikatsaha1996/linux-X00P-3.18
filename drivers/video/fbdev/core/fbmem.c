@@ -1145,9 +1145,15 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
 		ret = copy_to_user(argp, &fix, sizeof(fix)) ? -EFAULT : 0;
 		break;
 	case FBIOPUTCMAP:
-		if (copy_from_user(&cmap, argp, sizeof(cmap)))
+			printk(KERN_ERR "PMOS DEBUG: calling copy_from_user...\n");
+		if (copy_from_user(&cmap, argp, sizeof(cmap))) {
+			printk(KERN_ERR "PMOS DEBUG: copy_from_user failed!\n");
 			return -EFAULT;
+		}
+		printk(KERN_ERR "PMOS DEBUG: copy_from_user ok!\n");
+		printk(KERN_ERR "PMOS DEBUG: calling fb_set_user_cmap...\n");
 		ret = fb_set_user_cmap(&cmap, info);
+		printk(KERN_ERR "PMOS DEBUG: fb_set_user_cmap returned %d\n", ret);
 		break;
 	case FBIOGETCMAP:
 		if (copy_from_user(&cmap, argp, sizeof(cmap)))
